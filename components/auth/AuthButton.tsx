@@ -2,7 +2,7 @@
 // File: components/AuthButton.tsx (updated)
 'use client'
 
-import { useAuth } from '@/components/AuthProvider'
+import { useAuth } from '@/components/auth/AuthProvider'
 import Link from 'next/link'
 
 export default function AuthButton() {

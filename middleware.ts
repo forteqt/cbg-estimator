@@ -1,22 +1,33 @@
-// File: middleware.ts (updated)
-import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
+// File: middleware.ts
+
+import { createMiddlewareSupabaseClient } from '@/lib/supabase/middleware'
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
-  const supabase = createMiddlewareClient({ req, res })
+  const supabase = createMiddlewareSupabaseClient(req)
 
+  // Check auth state
   const {
     data: { session },
   } = await supabase.auth.getSession()
 
-  if (!session && !req.nextUrl.pathname.startsWith('/signin')) {
-    return NextResponse.redirect(new URL('/signin', req.url))
+  // Auth redirect logic
+  const isAuthPage = req.nextUrl.pathname.startsWith('/auth')
+  const isApiRoute = req.nextUrl.pathname.startsWith('/api')
+
+  if (!session && !isAuthPage && !isApiRoute) {
+    // Redirect unauthenticated users to login page
+    const redirectUrl = req.nextUrl.clone()
+    redirectUrl.pathname = '/auth/signin'
+    redirectUrl.searchParams.set(`redirectedFrom`, req.nextUrl.pathname)
+    return NextResponse.redirect(redirectUrl)
   }
 
-  if (session && (req.nextUrl.pathname === '/signin' || req.nextUrl.pathname === '/')) {
-    return NextResponse.redirect(new URL('/projects', req.url))
+  if (session && isAuthPage) {
+    // Redirect authenticated users to dashboard
+    return NextResponse.redirect(new URL('/dashboard', req.url))
   }
 
   return res

@@ -3,7 +3,7 @@ import { createServerComponentClient } from '@supabase/auth-helpers-nextjs'
 import { cookies } from 'next/headers'
 import { notFound } from 'next/navigation'
 
-export default async function ProjectDetail({ params: { id } }) {
+export default async function ProjectDetail({ params: { id } }: { params: { id: string } }) {
   const supabase = createServerComponentClient({ cookies })
   const { data: project, error } = await supabase
     .from('projects')
@@ -23,7 +23,7 @@ export default async function ProjectDetail({ params: { id } }) {
       <h2 className="text-xl font-semibold mt-6 mb-2">Measurements</h2>
       {project.measurements && project.measurements.length > 0 ? (
         <ul>
-          {project.measurements.map((measurement) => (
+          {project.measurements.map((measurement: { id: string, type: string, value: number, unit: string }) => (
             <li key={measurement.id}>
               {measurement.type}: {measurement.value} {measurement.unit}
             </li>
@@ -36,7 +36,7 @@ export default async function ProjectDetail({ params: { id } }) {
       <h2 className="text-xl font-semibold mt-6 mb-2">Estimates</h2>
       {project.estimates && project.estimates.length > 0 ? (
         <ul>
-          {project.estimates.map((estimate) => (
+          {project.estimates.map((estimate: { id: string, name: string, total_cost: number }) => (
             <li key={estimate.id}>
               {estimate.name}: ${estimate.total_cost}
             </li>
