@@ -1,49 +1,31 @@
-// components/Navbar.tsx
+// File: components/Navbar.tsx
 'use client'
 
 import Link from 'next/link'
-import { useAuth } from './AuthProvider'
-import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
+import { useAuth } from '@/components/AuthProvider'
+import AuthButton from '@/components/AuthButton'
 
-export const Navbar = () => {
+const Navbar = () => {
   const { user } = useAuth()
-  const router = useRouter()
-
-  const handleSignOut = async () => {
-    await supabase.auth.signOut()
-    router.push('/')
-  }
 
   return (
-    <nav className="bg-gray-800 p-4">
+    <nav className="bg-gray-800 text-white p-4">
       <div className="container mx-auto flex justify-between items-center">
-        <Link href="/" className="text-white font-bold">
-          My App
-        </Link>
-        <div>
-          {user ? (
+        <Link href="/" className="text-xl font-bold">CBGTI Estimator</Link>
+        <div className="space-x-4">
+          {user && (
             <>
-              <Link href="/dashboard" className="text-white mr-4">
-                Dashboard
-              </Link>
-              <button
-                onClick={handleSignOut}
-                className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded"
-              >
-                Sign Out
-              </button>
+              <Link href="/projects" className="hover:text-gray-300">Projects</Link>
+              <Link href="/takeoff" className="hover:text-gray-300">Takeoff</Link>
+              <Link href="/estimate" className="hover:text-gray-300">Estimate</Link>
+              <Link href="/reports" className="hover:text-gray-300">Reports</Link>
             </>
-          ) : (
-            <Link
-              href="/auth/signin"
-              className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
-            >
-              Sign In
-            </Link>
           )}
+          <AuthButton />
         </div>
       </div>
     </nav>
   )
 }
+
+export default Navbar

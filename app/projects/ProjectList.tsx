@@ -4,7 +4,7 @@
 import { useState } from 'react'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 
-export default function ProjectList({ initialProjects }: { initialProjects: any[]}) {
+export default function ProjectList({ initialProjects }: { initialProjects: any[] }) {
   const [projects, setProjects] = useState(initialProjects)
   const supabase = createClientComponentClient()
 

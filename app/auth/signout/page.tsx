@@ -1,12 +1,13 @@
-// app/auth/signout/page.tsx
+// File: app/signout/page.tsx
 'use client'
 
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useEffect } from 'react'
 import { useRouter } from 'next/navigation'
-import { supabase } from '@/lib/supabase'
 
 export default function SignOut() {
   const router = useRouter()
+  const supabase = createClientComponentClient()
 
   useEffect(() => {
     const signOut = async () => {
@@ -14,7 +15,11 @@ export default function SignOut() {
       router.push('/')
     }
     signOut()
-  }, [router])
+  }, [supabase, router])
 
-  return <div>Signing out...</div>
+  return (
+    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+      <p>Signing out...</p>
+    </div>
+  )
 }
